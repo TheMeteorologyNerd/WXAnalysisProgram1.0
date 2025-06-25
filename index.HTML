@@ -144,20 +144,21 @@
   </div>
 </div>
 
+<!-- SPC Sections with refreshing logic -->
 <div id="spc1" class="tab">
   <h2>SPC Day 1</h2>
   <div id="spc1-timer" class="results"></div>
-  <img src="https://www.spc.noaa.gov/products/outlook/day1otlk_1300.gif" style="width:100%;">
+  <img id="spc1-img" data-src="https://www.spc.noaa.gov/products/outlook/day1otlk.gif" src="" style="width:100%;" alt="SPC Day 1 Outlook">
 </div>
 <div id="spc2" class="tab">
   <h2>SPC Day 2</h2>
   <div id="spc2-timer" class="results"></div>
-  <img src="https://www.spc.noaa.gov/products/outlook/day2otlk_0700.gif" style="width:100%;">
+  <img id="spc2-img" data-src="https://www.spc.noaa.gov/products/outlook/day2otlk.gif" src="" style="width:100%;" alt="SPC Day 2 Outlook">
 </div>
 <div id="spc3" class="tab">
   <h2>SPC Day 3</h2>
   <div id="spc3-timer" class="results"></div>
-  <img src="https://www.spc.noaa.gov/products/outlook/day3otlk_0730.gif" style="width:100%;">
+  <img id="spc3-img" data-src="https://www.spc.noaa.gov/products/outlook/day3otlk.gif" src="" style="width:100%;" alt="SPC Day 3 Outlook">
 </div>
 
 <script>
@@ -182,6 +183,15 @@
     document.getElementById("spc2-timer").innerText = message;
     document.getElementById("spc3-timer").innerText = message;
     document.getElementById("location-time").textContent = `Local Time: ${now.toLocaleString()}`;
+  }
+
+  function reloadSPCImages() {
+    ['spc1-img', 'spc2-img', 'spc3-img'].forEach(id => {
+      const img = document.getElementById(id);
+      if (img && img.dataset.src) {
+        img.src = img.dataset.src + '?t=' + new Date().getTime();
+      }
+    });
   }
 
   function getLocationLatLonOnly() {
@@ -273,7 +283,9 @@
   };
 
   getLocationLatLonOnly();
-  setInterval(updateSPCTimer, 1000);
+  reloadSPCImages(); // Initial SPC image load
+  setInterval(updateSPCTimer, 1000); // Update timers every second
+  setInterval(reloadSPCImages, 5 * 60 * 1000); // Reload images every 5 minutes
 </script>
 </body>
 </html>
